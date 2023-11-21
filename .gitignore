@@ -40,9 +40,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-# intenal
-.env
-package-lock.json
-*.bak
-*.code-workspace
