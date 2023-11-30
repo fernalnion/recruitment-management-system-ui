@@ -1,0 +1,95 @@
+<nz-card nzTitle="Roles" [nzExtra]="roleTemplate">
+  <nz-table
+    #basicTable
+    [nzData]="lisOfRoles"
+    [nzLoading]="loading"
+    nzShowPagination
+    nzShowSizeChanger
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.name }}</td>
+        <td>
+          <button
+            [disabled]="data.isDefault"
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-success"
+            (click)="showEditModal(data)"
+          >
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            [disabled]="data.isDefault"
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-warning"
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure delete this role?"
+            (nzOnConfirm)="deleteRole(data)"
+            nzPopconfirmPlacement="topLeft"
+          >
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<ng-template #roleTemplate>
+  <button
+    nz-button
+    nzType="primary"
+    [nzSize]="'small'"
+    class="bg-color-info"
+    (click)="showAddModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Add
+  </button>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="visibleAddModal"
+  [nzTitle]="'Add Role'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleAddModalCancel()"
+  (nzOnOk)="handleAddModalOk()"
+>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="visibleEditdModal"
+  [nzTitle]="'Update Role'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleEditModalCancel()"
+  (nzOnOk)="handleEditModalOk()"
+>
+</nz-modal>
+
+<ng-template #modalContent>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input role!">
+        <nz-input-group nzPrefixIcon="user">
+          <input
+            type="text"
+            nz-input
+            formControlName="name"
+            placeholder="Role"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>

@@ -1,0 +1,220 @@
+<nz-card nzTitle="Jobs" [nzExtra]="roleTemplate">
+  <nz-table
+    #basicTable
+    [nzData]="lisOfJobs"
+    [nzLoading]="loading"
+    nzShowPagination
+    nzShowSizeChanger
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Openings</th>
+        <th>Skills</th>
+        <th>Posted At</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.title }}</td>
+        <td>
+          {{
+            departmentObject[data.department]
+              ? departmentObject[data.department].name
+              : "-"
+          }}
+        </td>
+        <td>{{ data.openings }}</td>
+        <td>
+          <nz-tag
+            *ngFor="let tag of data.skills; let i = index"
+            [nzColor]="tagcolors[i % tagcolors.length]"
+            >{{ tag }}</nz-tag
+          >
+        </td>
+        <td>{{ data.postedAt }}</td>
+        <td>
+          <button
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-success"
+            (click)="showEditModal(data)"
+          >
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            [ngClass]="{
+              'bg-color-error': !data.isActive,
+              'bg-color-info': data.isActive
+            }"
+            (click)="updateStatus(data._id, data.isActive)"
+          >
+            <span nz-icon [nzType]="!data.isActive ? 'close' : 'check'"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<ng-template #roleTemplate>
+  <button
+    nz-button
+    nzType="primary"
+    [nzSize]="'small'"
+    class="bg-color-info"
+    (click)="showAddModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Add
+  </button>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="visibleAddModal"
+  [nzTitle]="'Add Job'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleAddModalCancel()"
+  (nzOnOk)="handleAddModalOk()"
+>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="visibleEditdModal"
+  [nzTitle]="'Update Job'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleEditModalCancel()"
+  (nzOnOk)="handleEditModalOk()"
+>
+</nz-modal>
+
+<ng-template #modalContent>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="title"
+        >Title</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input title!">
+        <input
+          type="text"
+          nz-input
+          formControlName="title"
+          placeholder="Title"
+          id="title"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="description"
+        >Description</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input description!"
+      >
+        <textarea
+          rows="4"
+          nz-input
+          formControlName="description"
+          placeholder="Description"
+          id="description"
+        ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department"
+        >Department</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input department!"
+      >
+        <nz-select
+          [ngModel]="validateForm.value.department"
+          id="department"
+          formControlName="department"
+          nzPlaceHolder="Select Department"
+        >
+          <nz-option
+            *ngFor="let department of lisOfDepartments"
+            [nzValue]="department._id"
+            [nzLabel]="department.name"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="openings"
+        >Openings</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="openingsErrorTpl">
+        <input
+          type="number"
+          nz-input
+          [min]="1"
+          [max]="100"
+          formControlName="openings"
+          placeholder="Openings"
+          id="openings"
+        />
+        <ng-template #openingsErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')"
+            >Please input openings!</ng-container
+          >
+          <ng-container *ngIf="control.hasError('min')"
+            >Minimum value should be 1!</ng-container
+          >
+          <ng-container *ngIf="control.hasError('max')"
+            >Maximum value should be 100!</ng-container
+          >
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="skills"
+        >Skills</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input skills!"
+      >
+        <nz-tag
+          *ngFor="let tag of validateForm.value.skills; let i = index"
+          [nzMode]="'closeable'"
+          (nzOnClose)="handleClose(tag)"
+        >
+          {{ sliceTagName(tag) }}
+        </nz-tag>
+        <nz-tag
+          *ngIf="!tagInputVisible"
+          class="editable-tag"
+          nzNoAnimation
+          (click)="showInput()"
+        >
+          <span nz-icon nzType="plus"></span>
+          New Tag
+        </nz-tag>
+        <input
+          #popTags
+          nz-input
+          nzSize="small"
+          *ngIf="tagInputVisible"
+          style="width: 78px"
+          (blur)="handleInputConfirm($event)"
+          (keydown.enter)="handleInputConfirm($event)"
+          id="skills"
+        />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
