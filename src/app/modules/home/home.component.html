@@ -1,0 +1,192 @@
+<div class="page-header">
+  <h2>Hello, Welcome {{ GetUserFullName }} !</h2>
+  <div class="actions">
+    <button nz-button nzType="primary" [nzSize]="'small'" class="">
+      <span nz-icon nzType="download"></span>
+      Download
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      [nzSize]="'small'"
+      [routerLink]="['/departments']"
+    >
+      <span nz-icon nzType="plus"></span>
+      Post a Job
+    </button>
+  </div>
+</div>
+
+<div nz-row [nzJustify]="'space-around'" class="row-2">
+  <nz-card nzBorderless nz-col [nzSm]="24" [nzMd]="8">
+    <div class="header-item">
+      <nz-avatar nzIcon="hdd" class="bg-color-1"></nz-avatar>
+      <h4>{{ applications.total }} Total Applications</h4>
+      <button nz-button nzShape="circle" [nzSize]="'small'">
+        <span nz-icon nzType="right"></span>
+      </button>
+    </div>
+  </nz-card>
+
+  <nz-card nzBorderless nz-col [nzSm]="24" [nzMd]="8">
+    <div class="header-item">
+      <nz-avatar nzIcon="hdd" class="bg-color-9"></nz-avatar>
+      <h4>{{ status["YET_TO_SCREEN"] }} Candidates to Review</h4>
+      <button nz-button nzShape="circle" [nzSize]="'small'">
+        <span nz-icon nzType="right"></span>
+      </button>
+    </div>
+  </nz-card>
+
+  <nz-card nzBorderless nz-col [nzSm]="24" [nzMd]="8">
+    <div class="header-item">
+      <nz-avatar nzIcon="hdd" class="bg-color-2"></nz-avatar>
+      <h4>{{ interviews.total }} Scheduled Interviews</h4>
+      <button nz-button nzShape="circle" [nzSize]="'small'">
+        <span nz-icon nzType="right"></span>
+      </button>
+    </div>
+  </nz-card>
+</div>
+
+<div
+  nz-row
+  class="chart-container"
+  [nzGutter]="8"
+  [nzJustify]="'space-around'"
+  class="row-3"
+>
+  <div nz-col [nzXs]="24" [nzLg]="24" [nzXl]="15" [nzXXl]="17">
+    <nz-card nzTitle="Task Delivery"
+      ><div id="task-delivery" style="height: 350px"></div>
+    </nz-card>
+  </div>
+  <div
+    nz-col
+    [nzXs]="24"
+    [nzLg]="24"
+    [nzXl]="9"
+    [nzXXl]="7"
+    class="today-meeting"
+  >
+    <nz-card nzTitle="Today's Scheduled Meetings">
+      <nz-list>
+        <nz-list-item *ngFor="let item of upcomingInterviews">
+          <nz-list-item-meta>
+            <nz-list-item-meta-avatar>
+              <div class="date-badge">
+                <span class="date">{{ item.scheduleAt | date : "dd" }}</span>
+                <span class="month">{{ item.scheduleAt | date : "MMMM" }}</span>
+              </div>
+            </nz-list-item-meta-avatar>
+            <nz-list-item-meta-title>
+              Meeting with {{ applicants.objects[item.applicant].firstname }}
+              {{ applicants.objects[item.applicant].lastname }}
+            </nz-list-item-meta-title>
+            <nz-list-item-meta-description>
+              <span class="sm-date-time"
+                >Time: {{ item.scheduleAt | date : "hh:mm a" }}; Duration:
+                1hour</span
+              ><br />
+              <button nz-button nzType="text" [nzSize]="'small'">
+                Get Meeting Details
+                <span nz-icon nzType="right"></span>
+              </button>
+            </nz-list-item-meta-description>
+          </nz-list-item-meta>
+        </nz-list-item>
+      </nz-list>
+    </nz-card>
+  </div>
+</div>
+
+<div nz-row [nzGutter]="8" [nzJustify]="'space-around'" class="row-4">
+  <div nz-col [nzMd]="24" [nzLg]="10">
+    <nz-card nzTitle="Ongoing Process">
+      <cdk-virtual-scroll-viewport
+        itemSize="73"
+        class="demo-infinite-container"
+      >
+        <nz-list class="list-default" *ngIf="isLoadingDone">
+          <nz-list-item *cdkVirtualFor="let item of comments.data">
+            <nz-list-item-meta>
+              <nz-list-item-meta-avatar
+                nzSrc="assets/images/avator.png"
+              ></nz-list-item-meta-avatar>
+              <nz-list-item-meta-title>
+                {{
+                  applicants.objects[
+                    applications.objects[item.application].applicant
+                  ].firstname
+                }}
+                {{
+                  applicants.objects[
+                    applications.objects[item.application].applicant
+                  ].lastname
+                }}
+                - {{ item.title }}</nz-list-item-meta-title
+              >
+              <nz-list-item-meta-description>
+                {{ item.description }}
+              </nz-list-item-meta-description>
+            </nz-list-item-meta>
+          </nz-list-item>
+        </nz-list>
+      </cdk-virtual-scroll-viewport>
+    </nz-card>
+  </div>
+
+  <div nz-col [nzMd]="24" [nzLg]="10">
+    <nz-card nzTitle="Current Openings Department wise">
+      <div id="role-working-type" style="height: 300px"></div>
+    </nz-card>
+  </div>
+
+  <div nz-col [nzMd]="24" [nzLg]="4">
+    <nz-list class="last-column">
+      <nz-list-item class="bg-color-2">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>{{
+            current_openings
+          }}</nz-list-item-meta-title>
+          <nz-list-item-meta-description
+            >Current Open Possitions</nz-list-item-meta-description
+          >
+        </nz-list-item-meta>
+      </nz-list-item>
+
+      <nz-list-item class="bg-color-4">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>{{
+            status["ON_BOARDED"]
+          }}</nz-list-item-meta-title>
+          <nz-list-item-meta-description
+            >New Employees Onboarded</nz-list-item-meta-description
+          >
+        </nz-list-item-meta>
+      </nz-list-item>
+
+      <nz-list-item class="bg-color-8">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>{{
+            status["YET_TO_RELEASE_OFFER"]
+          }}</nz-list-item-meta-title>
+          <nz-list-item-meta-description
+            >Yet to Release Offer</nz-list-item-meta-description
+          >
+        </nz-list-item-meta>
+      </nz-list-item>
+
+      <nz-list-item class="bg-color-8">
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>{{
+            status["REJECTED"]
+          }}</nz-list-item-meta-title>
+          <nz-list-item-meta-description
+            >Rejected</nz-list-item-meta-description
+          >
+        </nz-list-item-meta>
+      </nz-list-item>
+    </nz-list>
+  </div>
+</div>

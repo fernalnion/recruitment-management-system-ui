@@ -1,0 +1,221 @@
+<nz-card nzTitle="Applicants" [nzExtra]="roleTemplate">
+  <nz-table
+    #basicTable
+    [nzData]="applications.data"
+    [nzLoading]="loading"
+    nzShowPagination
+    nzShowSizeChanger
+  >
+    <thead>
+      <tr>
+        <th>Applicant Name</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>Job Title</th>
+        <th>Department</th>
+        <th>Skills</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>
+          {{ applicants.objects[data.applicant].firstname }}
+          {{ applicants.objects[data.applicant].lastname }}
+        </td>
+        <td>{{ applicants.objects[data.applicant].email }}</td>
+        <td>{{ applicants.objects[data.applicant].mobile }}</td>
+        <td>{{ jobs.objects[data.job].title }}</td>
+        <td>
+          {{ departments.objects[jobs.objects[data.job].department].name }}
+        </td>
+        <td>
+          <nz-tag
+            *ngFor="let tag of jobs.objects[data.job].skills; let i = index"
+            [nzColor]="tagcolors[i % tagcolors.length]"
+            >{{ tag }}</nz-tag
+          >
+        </td>
+
+        <td>
+          <button
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-success"
+            (click)="showEditModal(data)"
+          >
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <nz-divider nzType="vertical"></nz-divider>
+          <button
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-info"
+            (click)="showInterviewModal(data)"
+          >
+            <span nz-icon nzType="calendar"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<ng-template #roleTemplate>
+  <button
+    nz-button
+    nzType="primary"
+    [nzSize]="'small'"
+    class="bg-color-info"
+    (click)="showAddModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Add
+  </button>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="visibleAddModal"
+  [nzTitle]="'Add Application'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleAddModalCancel()"
+  (nzOnOk)="handleAddModalOk()"
+>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="visibleEditdModal"
+  [nzTitle]="'Update Application'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleEditModalCancel()"
+  (nzOnOk)="handleEditModalOk()"
+>
+</nz-modal>
+
+<ng-template #modalContent>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="applicant"
+        >Applicant</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input Applicant!"
+      >
+        <nz-select
+          [ngModel]="validateForm.value.applicant"
+          id="applicant"
+          formControlName="applicant"
+          nzPlaceHolder="Select Applicant"
+        >
+          <nz-option
+            *ngFor="let applicant of applicants.data"
+            [nzValue]="applicant._id"
+            [nzLabel]="applicant.firstname + ' ' + applicant.lastname"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department"
+        >Department</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input department!"
+      >
+        <nz-select
+          [ngModel]="validateForm.value.department"
+          id="department"
+          formControlName="department"
+          nzPlaceHolder="Select Department"
+          (ngModelChange)="departmentChanged($event)"
+        >
+          <nz-option
+            *ngFor="let department of departments.data"
+            [nzValue]="department._id"
+            [nzLabel]="department.name"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="job"
+        >Job</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input job!">
+        <nz-select
+          [ngModel]="validateForm.value.job"
+          id="job"
+          formControlName="job"
+          nzPlaceHolder="Select Job"
+        >
+          <nz-option
+            *ngFor="let job of listOfJobsFiltered"
+            [nzValue]="job._id"
+            [nzLabel]="job.title"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="status"
+        >Status</nz-form-label
+      >
+      <nz-form-control
+        [nzSm]="14"
+        [nzXs]="24"
+        nzErrorTip="Please input status!"
+      >
+        <nz-select
+          [ngModel]="validateForm.value.status"
+          id="status"
+          formControlName="status"
+          nzPlaceHolder="Select Status"
+        >
+          <nz-option
+            *ngFor="let status of appliationStatus"
+            [nzValue]="status.value"
+            [nzLabel]="status.key"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="isVisibleInterview"
+  nzTitle="The first Modal"
+  (nzOnCancel)="handleInterviewCancel()"
+  (nzOnOk)="handleInterviewOk()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="interviewForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="scheduleAt"
+          >Interview Schedule</nz-form-label
+        >
+        <nz-form-control
+          [nzSm]="14"
+          [nzXs]="24"
+          nzErrorTip="Please input Interview Schedule!"
+        >
+          <nz-date-picker
+            nzShowTime
+            nzFormat="yyyy-MM-dd HH:mm:ss"
+            formControlName="scheduleAt"
+            [ngModel]="interviewForm.value.scheduleAt"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

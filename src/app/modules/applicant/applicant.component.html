@@ -1,0 +1,133 @@
+<nz-card nzTitle="Applicants" [nzExtra]="roleTemplate">
+  <nz-table
+    #basicTable
+    [nzData]="listOfApplicants"
+    [nzLoading]="loading"
+    nzShowPagination
+    nzShowSizeChanger
+  >
+    <thead>
+      <tr>
+        <th>FirstName</th>
+        <th>LastName</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.firstname }}</td>
+        <td>{{ data.lastname }}</td>
+        <td>{{ data.email }}</td>
+        <td>{{ data.mobile }}</td>
+        <td>
+          <button
+            nz-button
+            nzType="primary"
+            [nzSize]="'small'"
+            class="bg-color-success"
+            (click)="showEditModal(data)"
+          >
+            <span nz-icon nzType="edit"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+
+<ng-template #roleTemplate>
+  <button
+    nz-button
+    nzType="primary"
+    [nzSize]="'small'"
+    class="bg-color-info"
+    (click)="showAddModal()"
+  >
+    <span nz-icon nzType="plus"></span>
+    Add
+  </button>
+</ng-template>
+
+<nz-modal
+  [(nzVisible)]="visibleAddModal"
+  [nzTitle]="'Add Applicant'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleAddModalCancel()"
+  (nzOnOk)="handleAddModalOk()"
+>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="visibleEditdModal"
+  [nzTitle]="'Update Applicant'"
+  [nzContent]="modalContent"
+  (nzOnCancel)="handleEditModalCancel()"
+  (nzOnOk)="handleEditModalOk()"
+>
+</nz-modal>
+
+<ng-template #modalContent>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input FirstName!">
+        <nz-input-group nzPrefixIcon="user">
+          <input
+            type="text"
+            nz-input
+            formControlName="firstname"
+            placeholder="FirstName"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input LastName!">
+        <nz-input-group nzPrefixIcon="user">
+          <input
+            type="text"
+            nz-input
+            formControlName="lastname"
+            placeholder="LastName"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input Email!">
+        <nz-input-group nzPrefixIcon="mail">
+          <input
+            type="text"
+            nz-input
+            formControlName="email"
+            placeholder="Email"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Please input Mobile!">
+        <nz-input-group nzPrefixIcon="mobile">
+          <input
+            type="text"
+            nz-input
+            formControlName="mobile"
+            placeholder="Mobile"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-upload
+      [nzShowUploadList]="false"
+      [nzBeforeUpload]="beforeUpload"
+      formControlName="image"
+    >
+      <button nz-button>
+        <span nz-icon nzType="upload"></span>
+        Click to Upload
+      </button>
+    </nz-upload>
+  </form>
+</ng-template>

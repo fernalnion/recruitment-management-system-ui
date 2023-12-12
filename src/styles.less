@@ -1,0 +1,83 @@
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
+@import "./app/style//variable.less";
+
+.text-primary {
+    color: @primary-color
+}
+
+.text-info {
+    color: @info-color
+}
+
+.text-success {
+    color: @success-color
+}
+
+.text-warning {
+    color: @warning-color
+}
+
+.text-error {
+    color: @error-color
+}
+
+.ant-layout-sider,
+.ant-menu.ant-menu-dark,
+.ant-menu-dark .ant-menu-sub,
+.ant-menu.ant-menu-dark .ant-menu-sub {
+    background: @primary-bg-color;
+}
+
+.ant-card-body {
+    padding: 12px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    .app-header {
+        position: fixed;
+        background: #fff;
+        height: 45px;
+        padding: 0;
+        padding-right: 1em;
+        line-height: 45px;
+        width: calc(100% - 80px);
+        transition: all 0.2s;
+    }
+
+    &:not(.menu-collapsed) .app-header {
+        width: calc(100% - 200px);
+    }
+}
+
+
+.ant-layout {
+    height: 100vh;
+    // background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+}
+
+.inner-content-sub {
+    &>div {
+        margin-bottom: 12px;
+    }
+}
+
+.row-4 {
+
+    nz-list:not(.list-default) {
+
+        .ant-list-item-meta-title,
+        .ant-list-item-meta-description {
+            color: #fff;
+        }
+
+        .ant-list-item-meta-title {
+            font-weight: bold
+        }
+    }
+
+}

@@ -1,0 +1,124 @@
+@import "../../style//variable.less";
+
+.trigger {
+    font-size: 18px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+
+.trigger:hover {
+    color: @primary-color;
+}
+
+.right-icon-items {
+    float: right;
+
+    nz-badge {
+        margin-right: 1.5em;
+    }
+
+    nz-avatar {
+        margin-left: 1em;
+    }
+
+    user-details1 {
+        margin-right: 2em;
+    }
+
+    .user-name,
+    .user-role {
+        display: block;
+        height: 16px;
+        line-height: 16px;
+        text-transform: capitalize;
+        font-weight: bold;
+    }
+
+    .user-name {
+        font-size: 12px;
+    }
+
+    .user-role {
+        font-size: 8px;
+        color: @secondary-color;
+        text-align: center;
+    }
+
+    .caret {
+        position: absolute;
+        top: 58%;
+        right: 0.1em;
+        font-size: 9px;
+    }
+}
+
+.logo {
+    height: 32px;
+    // background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+    padding-top: 6px;
+    text-align: center;
+    color: #fff;
+}
+
+nz-content {
+    margin: 0;
+    margin-top: 45px;
+    margin-left: 16px;
+}
+
+nz-breadcrumb {
+    margin: 16px 0;
+}
+
+.main-container {
+    width: 100%;
+    height: calc(100vh - (45px));
+    overflow: auto;
+}
+
+.inner-content {
+    padding: 16px;
+}
+
+.inner-content-sub {
+    div {
+        padding-bottom: 0.5em;
+    }
+}
+
+nz-footer {
+    text-align: center;
+    padding: 12px;
+    background-color: transparent;
+}
+
+.user-menu {
+    li span {
+        margin-right: 8px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .search-bar {
+        display: none;
+        width: 0px;
+        max-width: 0px;
+    }
+
+    .right-icon-items {
+        width: calc(100% - 66px);
+        float: right;
+
+        nz-divider {
+            display: none;
+        }
+    }
+
+    .user-details {
+        position: absolute;
+        right: 10px;
+    }
+}
